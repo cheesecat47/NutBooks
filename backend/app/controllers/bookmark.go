@@ -84,6 +84,12 @@ func AddBookmarkHandler(c *fiber.Ctx) error {
 	}
 	log.Debugw("[func AddBookmarkHandler]", "bookmark", bookmark)
 
+	job := &utils.Job{
+		UserID: user.ID,
+		Link:   params.Link,
+	}
+	utils.Enqueue(job)
+
 	return c.Status(fiber.StatusCreated).JSON(models.AddBookmarkResponse{
 		Error:   false,
 		Message: "Success",

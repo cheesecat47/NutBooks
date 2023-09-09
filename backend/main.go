@@ -3,18 +3,20 @@ package main
 import (
 	"api/app/middlewares"
 	"api/app/routes"
+	"api/app/utils"
 	"api/configs"
 	"api/db"
 	_ "api/docs"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/limiter"
-	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/spf13/cobra"
 )
 
 func main() {
@@ -93,10 +95,10 @@ var migrateDB = &cobra.Command{
 
 //	@BasePath	/api/v1
 
-// @securityDefinitions.apikey	ApiKeyAuth
-// @in							header
-// @name						Authorization
-// @description				AccessToken
+//	@securityDefinitions.apikey	ApiKeyAuth
+//	@in							header
+//	@name						Authorization
+//	@description				AccessToken
 func runServer() {
 	configs.Config()
 
@@ -122,6 +124,12 @@ func runServer() {
 
 	if app == nil {
 		log.Panicf("Cannot create app")
+	}
+
+	utils.InitQueue()
+	for w := 0; w < 2; w++ {
+		utils.WG.Add(1)
+		go utils.RunWorker()
 	}
 
 	// Graceful shutdown
@@ -150,5 +158,8 @@ func runServer() {
 
 	// cleanup tasks
 	// db.Close()
+	utils.StopQueue()
+	utils.WG.Wait()
+
 	log.Println("Fiber was successful shutdown.")
 }
