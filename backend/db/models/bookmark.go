@@ -25,11 +25,6 @@ type Bookmark struct {
 // [api/app/controllers.AddBookmarkHandler]에서 사용하는 요청/응답 구조체
 type (
 	AddBookmarkRequest struct {
-		// 5~50자 길이. 자세한 형식은 [go-playground/validator] 참고
-		//
-		// [go-playground/validator]: https://github.com/go-playground/validator
-		Email string `validate:"required,min=5,max=50,email" json:"email" form:"email"`
-
 		// 북마크 제목. 공백이면 og:title로 대체
 		Title string `default:"" json:"title"`
 
@@ -56,11 +51,6 @@ type (
 type (
 	GetBookmarkByIdRequest struct {
 		ID uint `validate:"required,number,min=1" json:"id"`
-
-		// 5~50자 길이. 자세한 형식은 [go-playground/validator] 참고
-		//
-		// [go-playground/validator]: https://github.com/go-playground/validator
-		Email string `validate:"required,min=5,max=50,email" json:"email" form:"email"`
 	}
 
 	GetBookmarkByIdResponse struct {
@@ -79,11 +69,6 @@ type (
 // [api/app/controllers.GetAllBookmarksHandler]에서 사용하는 요청/응답 구조체
 type (
 	GetAllBookmarksRequest struct {
-		// 5~50자 길이. 자세한 형식은 [go-playground/validator] 참고
-		//
-		// [go-playground/validator]: https://github.com/go-playground/validator
-		Email string `validate:"required,min=5,max=50,email" json:"email" form:"email"`
-
 		// 특정 id부터 조회할 때 사용
 		Offset int `validate:"number,min=0" json:"offset"`
 

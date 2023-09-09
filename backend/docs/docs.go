@@ -97,8 +97,9 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "format": "email",
                         "description": "현재 유저 이메일",
-                        "name": "email",
+                        "name": "Email",
                         "in": "header",
                         "required": true
                     },
@@ -162,8 +163,9 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "format": "email",
                         "description": "현재 유저 이메일",
-                        "name": "email",
+                        "name": "Email",
                         "in": "header",
                         "required": true
                     },
@@ -216,8 +218,9 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "format": "email",
                         "description": "현재 유저 이메일",
-                        "name": "email",
+                        "name": "Email",
                         "in": "header",
                         "required": true
                     },
@@ -422,7 +425,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "현재 유저 이메일",
-                        "name": "email",
+                        "name": "Email",
                         "in": "header",
                         "required": true
                     },
@@ -479,16 +482,9 @@ const docTemplate = `{
         "models.AddBookmarkRequest": {
             "type": "object",
             "required": [
-                "email",
                 "link"
             ],
             "properties": {
-                "email": {
-                    "description": "5~50자 길이. 자세한 형식은 [go-playground/validator] 참고\n\n[go-playground/validator]: https://github.com/go-playground/validator",
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 5
-                },
                 "link": {
                     "description": "북마크(웹사이트) 링크. 자세한 형식은 [go-playground/validator] 참고\n\n[go-playground/validator]: https://github.com/go-playground/validator",
                     "type": "string",

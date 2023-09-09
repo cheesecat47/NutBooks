@@ -6,6 +6,7 @@ import (
 	"api/db/crud"
 	"api/db/models"
 	"errors"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v5"
@@ -20,7 +21,7 @@ import (
 //	@Accept			json
 //	@Produce		json
 //	@Security		ApiKeyAuth
-//	@Param			Email	header		string						true	"현재 유저 이메일"
+//	@Param			Email	header		string						true	"현재 유저 이메일" 	Format(email)
 //	@Param			params	body		models.AddBookmarkRequest	true	"body params"
 //	@Success		201		{object}	models.AddBookmarkResponse
 //	@Failure		400		{object}	models.AddBookmarkWithErrorResponse
@@ -36,7 +37,7 @@ func AddBookmarkHandler(c *fiber.Ctx) error {
 			Data:    err,
 		})
 	}
-	params.Email = c.GetReqHeaders()["Email"]
+	paramEmail := c.GetReqHeaders()["Email"]
 
 	validator := &utils.Validator{}
 	validateErrs := validator.Validate(params)
@@ -50,7 +51,7 @@ func AddBookmarkHandler(c *fiber.Ctx) error {
 	log.Infow("[func AddBookmarkHandler]", "params", params)
 
 	token := c.Locals("user").(*jwt.Token)
-	err = middlewares.ValidToken(token, params.Email)
+	err = middlewares.ValidToken(token, paramEmail)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(models.AddBookmarkWithErrorResponse{
 			Error:   true,
@@ -59,7 +60,7 @@ func AddBookmarkHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := crud.GetUserByEmail(params.Email)
+	user, err := crud.GetUserByEmail(paramEmail)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.AddBookmarkWithErrorResponse{
 			Error:   true,
@@ -96,7 +97,7 @@ func AddBookmarkHandler(c *fiber.Ctx) error {
 //	@Tags		bookmark
 //	@Produce	json
 //	@Security	ApiKeyAuth
-//	@Param		Email	header		string	true	"현재 유저 이메일"
+//	@Param		Email	header		string	true	"현재 유저 이메일"	Format(email)
 //	@Param		id		path		uint	true	"Bookmark ID"
 //	@Success	200		{object}	models.GetBookmarkByIdResponse
 //	@Failure	400		{object}	models.GetBookmarkByIdWithErrorResponse
@@ -113,7 +114,7 @@ func GetBookmarkByIdHandler(c *fiber.Ctx) error {
 			Data:    err,
 		})
 	}
-	params.Email = c.GetReqHeaders()["Email"]
+	paramEmail := c.GetReqHeaders()["Email"]
 
 	validator := &utils.Validator{}
 	validateError := validator.Validate(params)
@@ -127,7 +128,7 @@ func GetBookmarkByIdHandler(c *fiber.Ctx) error {
 	log.Infow("[func GetBookmarkByIdHandler]", "params", params)
 
 	token := c.Locals("user").(*jwt.Token)
-	err = middlewares.ValidToken(token, params.Email)
+	err = middlewares.ValidToken(token, paramEmail)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(models.GetBookmarkByIdWithErrorResponse{
 			Error:   true,
@@ -167,7 +168,7 @@ func GetBookmarkByIdHandler(c *fiber.Ctx) error {
 //	@Tags		bookmark
 //	@Produce	json
 //	@Security	ApiKeyAuth
-//	@Param		Email	header		string	true	"현재 유저 이메일"
+//	@Param		Email	header		string	true	"현재 유저 이메일"	Format(email)
 //	@Param		offset	query		int		false	"특정 id부터 조회할 때 사용"
 //	@Param		limit	query		int		false	"limit 개수만큼 조회할 때 사용"
 //	@Success	200		{object}	models.GetAllBookmarksResponse
@@ -185,7 +186,7 @@ func GetAllBookmarksHandler(c *fiber.Ctx) error {
 			Data:    err,
 		})
 	}
-	params.Email = c.GetReqHeaders()["Email"]
+	paramEmail := c.GetReqHeaders()["Email"]
 
 	validator := &utils.Validator{}
 	validateErrs := validator.Validate(params)
@@ -199,7 +200,7 @@ func GetAllBookmarksHandler(c *fiber.Ctx) error {
 	log.Infow("[func GetAllBookmarksHandler]", "params", params)
 
 	token := c.Locals("user").(*jwt.Token)
-	err = middlewares.ValidToken(token, params.Email)
+	err = middlewares.ValidToken(token, paramEmail)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(models.GetAllBookmarksWithErrorResponse{
 			Error:   true,
